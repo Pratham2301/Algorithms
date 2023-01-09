@@ -1,0 +1,87 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+/*
+defining a macro that denotes the total number of vertices of the graph
+*/
+#define V 4
+
+/* A function to print the color configuration*/
+void printConfiguration(int colorArray[]) {
+   cout << "The assigned colors are as follows: " << endl;
+   for (int i = 0; i < V; i++)
+      cout << "Vertex: " << i << " Color: " << colorArray[i] << endl;
+}
+
+/*
+A function that will check if the current color of the graph is safe or not.
+*/
+bool isSafe(int v, bool graph[V][V],
+            int colorArray[], int vertex) {
+   for (int i = 0; i < V; i++)
+      if (graph[v][i] && vertex == colorArray[i])
+         return false;
+
+   return true;
+}
+
+/*
+A recursive function that takes the current index, number of vertices, and the color array. If the recursive call returns true then the coloring is possible. It returns
+false if the m colors cannot be assigned.
+*/
+bool graphColoringAlgorithmUtil(bool graph[V][V], int m,
+                                int colorArray[], int currentVertex) {
+   // base case.
+   if (currentVertex == V)
+      return true;
+
+   for (int c = 1; c <= m; c++) {
+
+      if (isSafe(currentVertex, graph, colorArray, c)) {
+         colorArray[currentVertex] = c;
+
+         if (graphColoringAlgorithmUtil(
+                 graph, m, colorArray, currentVertex + 1))
+            return true;
+
+         // backtracking
+         colorArray[currentVertex] = 0;
+      }
+   }
+
+   return false;
+}
+
+bool graphColoringAlgorithm(bool graph[V][V], int m) {
+   /*
+   Initially, the color array is initialized with 0.
+   */
+   int colorArray[V];
+   for (int i = 0; i < V; i++)
+      colorArray[i] = 0;
+
+   // Call graphColoringAlgorithmUtil() for vertex 0
+   if (!graphColoringAlgorithmUtil(graph, m, colorArray, 0)) {
+      cout << "Coloring is not possible!";
+      return false;
+   }
+
+   cout << "Coloring is possible!";
+   printConfiguration(colorArray);
+
+   return true;
+}
+
+int main() {
+   bool graph[V][V] = {
+       {0, 1, 1, 1},
+       {1, 0, 1, 0},
+       {1, 1, 0, 1},
+       {1, 0, 1, 0},
+   };
+
+   int m = 3;
+   graphColoringAlgorithm(graph, m);
+
+   return 0;
+}

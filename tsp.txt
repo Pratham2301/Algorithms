@@ -1,0 +1,54 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int getMinDistance(int mask, int currentCity, vector<vector<int>> &distance)
+{
+    int n = distance.size();
+
+    // All cities being visited.
+    if (mask == (1 << n) - 1)
+    {
+        return distance[currentCity][0];
+    }
+
+    int ans = INT_MAX;
+
+    // Trying for every possible city and computing the shortest possible route.
+    for (int city = 0; city < n; city++)
+    {
+        if ((mask & (1 << city)) == 0)
+        {
+            int tmpAns = distance[currentCity][city] + getMinDistance(mask | (1 << city), city, distance);
+            ans = min(ans, tmpAns);
+        }
+    }
+
+    // Return the ans.
+    return ans;
+}
+
+int shortestRoute(vector<vector<int>> &distance)
+{
+    int n = distance.size();
+
+    // Return the ans returned by getMinDistance.
+    return getMinDistance(1, 0, distance);
+}
+
+int main()
+{
+    vector<vector<int>> graph = {{0, 20,42,35},
+                                {20, 0, 30, 34},
+                                {42, 30, 0, 10},
+                                {25, 34, 10, 0}};
+
+    cout << shortestRoute(graph) << endl;
+    return 0;
+}
+
+/*
+    Time Complexity : O(N * N!)
+    Space Complexity : O(N)
+
+    where 'N' is the size in the given array.
+*/

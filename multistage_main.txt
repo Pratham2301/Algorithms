@@ -1,0 +1,92 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+#define n 8
+#define INF INT_MAX
+
+void shortestDist(int graph[n][n]) 
+{
+    int bcost[n]={INF};
+    int d[n]={0};
+
+    bcost[0] = 0;
+    d[0]=0;
+
+    for(int i=1;i<n;i++)
+    {
+        int temp = INF;
+        int parent = -1;
+
+        for(int j=0;j<n;j++)
+        {
+            if(graph[j][i] != INF)
+            {
+                if((bcost[j] + graph[j][i]) <temp)
+                {
+                    temp = bcost[j] + graph[j][i];
+                    parent = j;
+                }
+            }
+        }
+
+        bcost[i]=temp;
+        d[i] = parent; 
+    }
+
+    cout<<"Bcost matrix : \n";
+    for(int i=0;i<n;i++)
+    {
+        cout<<bcost[i]<<" ";
+    }
+    cout<<endl;
+
+
+    cout<<"d matrix : \n";
+    for(int i=0;i<n;i++)
+    {
+        cout<<d[i]<<" ";
+    }
+    cout<<endl;
+
+
+
+
+
+    vector<int>path;
+
+    path.push_back(n-1);
+
+    int i = n-1;
+    while(i>0)
+    {
+        path.push_back(d[i]);
+        i = d[i];
+    }
+
+    reverse(path.begin(), path.end());
+
+
+    cout<<"Path : \n";
+    for(auto i:path)
+        cout<<i<<" ";
+    cout<<endl;
+    
+}
+
+int main()
+{
+    int graph[n][n] =
+    {
+        {INF,   1,   2,   5, INF, INF, INF, INF},
+        {INF, INF, INF, INF,   4,  11, INF, INF},
+        {INF, INF, INF, INF,   9,   5,  16, INF},
+        {INF, INF, INF, INF, INF, INF,   2, INF},
+        {INF, INF, INF, INF, INF, INF, INF,  18},
+        {INF, INF, INF, INF, INF, INF, INF,  13},
+        {INF, INF, INF, INF, INF, INF, INF,   2},
+        {INF, INF, INF, INF, INF, INF, INF, INF}
+    };
+
+    shortestDist(graph);
+    return 0;
+}
